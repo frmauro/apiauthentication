@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
+let middleware = require('../middleware');
+let jwt = require('jsonwebtoken');
+let config = require('../config');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
@@ -51,11 +54,28 @@ router.post('/autenticate', function (req, res) {
         var userJson = JSON.stringify(user);
         var userObj = JSON.parse(userJson);
 
-        if (userObj[0].password != req.body.password) return res.status(404).send("User not autorization");
+        if (userObj[0].password != req.body.password) {
+            let dto =  {
+                success: false,
+                message: 'Incorrect username or password! User not autorization!'
+              }
+              return res.status(403).send(dto);
+        } 
 
+        let token = jwt.sign({username: userObj[0].password},  config.secret,
+            {
+                 expiresIn: '1h' // expires in 24 hours
+            }
+          );
+
+          let dto = {
+            success: true,
+            message: 'Authentication successful!',
+            token: token
+          }
 
         //res.status(200).send(req.body.password);
-        res.status(200).send(userObj[0]);
+        res.status(200).send(dto);
     });
 
 });
