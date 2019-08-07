@@ -12,10 +12,10 @@ var User = require('./User');
 // CREATES A NEW USER
 router.post('/', function (req, res) {
     User.create({
-            name : req.body.name,
+            name : req.body.email,
             email : req.body.email,
             password : req.body.password,
-            projects: req.body.projects
+            projects: "Finansys"//req.body.projects
         }, 
         function (err, user) {
             if (err) return res.status(500).send("There was a problem adding the information to the database.");
