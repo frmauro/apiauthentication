@@ -71,7 +71,8 @@ router.post('/autenticate', function (req, res) {
           let dto = {
             success: true,
             message: 'Authentication successful!',
-            token: token
+            token: token,
+            email: req.body.email
           }
 
         //res.status(200).send(req.body.password);
